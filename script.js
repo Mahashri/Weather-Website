@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const aqiDescription = getAQIDescription(aqiValue);
 
         // Remove the previous AQI element, if it exists
-        if (aqiElement) {
-            aqiElement.remove();
+        if (aqiElement && aqiElement.parentNode) {
+            aqiElement.parentNode.removeChild(aqiElement);
         }
 
         // Create a new AQI element

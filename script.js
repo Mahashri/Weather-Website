@@ -7,12 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to fetch weather and AQI data
     async function fetchData() {
         const location = locationInput.value.trim();
-        if (location !== '') {
-            await fetchWeather(location);
-            await fetchAQI(location); // Fetch AQI data
-        } else {
-            alert('Please enter a city name or zip code');
-        }
+        await fetchWeather(location);
+        await fetchAQI(location); // Fetch AQI data regardless of location value
     }
 
     // Event listener for clicking the search button
@@ -63,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
     function displayWeather(data) {
         const cityName = data.name;
         const temperature = data.main.temp;
@@ -88,6 +85,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Adjust footer position
         adjustFooterPosition();
+    }
+
+    function displayAQI(data) {
+        aqi = data.data.aqi; // Update global variable with AQI value
+        displayWeather(data); // Display weather and AQI data
     }
 
     function getAQIDescription(aqi) {

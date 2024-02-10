@@ -1,0 +1,174 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+    /* Set default background color */
+    animation: changeBackground 10s infinite alternate;
+    /* Add background color animation */
+}
+
+@keyframes changeBackground {
+    0% {
+        background-color: #f2f2f2;
+    }
+    50% {
+        background-color: #d3e0ea;
+    }
+    100% {
+        background-color: #f2f2f2;
+    }
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Set background color for container with transparency */
+    border-radius: 15px;
+    /* Add larger border radius */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    /* Add softer box shadow */
+    padding: 30px;
+    /* Add more padding */
+    animation: fadeIn 1s ease-in-out;
+    /* Add fadeIn animation */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+input[type="text"] {
+    padding: 15px;
+    width: 70%;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 25px;
+    /* Add larger border radius */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    /* Add softer box shadow */
+    transition: all 0.3s ease;
+    /* Add smooth transition */
+}
+
+input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
+    /* Add focus effect */
+}
+
+button {
+    padding: 15px 30px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    /* Add larger border radius */
+    transition: background-color 0.3s ease;
+    /* Add smooth transition */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#weatherDetails {
+    margin-top: 30px;
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Set background color for weather details with transparency */
+    border-radius: 15px;
+    /* Add larger border radius */
+    padding: 20px;
+    /* Add padding */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    /* Add softer box shadow */
+    animation: slideIn 1s ease-in-out;
+    /* Add slideIn animation */
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.weather-icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    animation: rotate 2s linear infinite;
+    /* Add rotation animation */
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.weather-description {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.weather-details {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.weather-animation {
+    width: 100%;
+    height: auto;
+    margin-top: 20px;
+    animation: float 5s ease-in-out infinite;
+    /* Add floating animation */
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+
+/* Add styles for the footer */
+
+.footer {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #d3e0ea;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.footer:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    /* Match the hover color to the background color */
+}

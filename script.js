@@ -2,18 +2,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('searchBtn');
     const locationInput = document.getElementById('locationInput');
     const weatherDetails = document.getElementById('weatherDetails');
-    let aqiElement = null; // Global variable to store reference to AQI element
+    let aqi = ''; // Global variable to store AQI value
 
     // Function to fetch weather and AQI data
-    async function fetchData() {
+    function fetchData() {
         const location = locationInput.value.trim();
-        const weatherData = await fetchWeather(location);
-        const aqiData = await fetchAQI(location); // Fetch AQI data along with weather data
-
-        // Update weather details only if both weather and AQI data are fetched successfully
-        if (weatherData && aqiData) {
-            displayWeather(weatherData);
-            displayAQI(aqiData);
+        if (location !== '') {
+            fetchWeather(location);
+            fetchAQI(location); // Fetch AQI data
+        } else {
+            alert('Please enter a city name or zip code');
         }
     }
 
@@ -36,14 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (response.ok) {
-                return data; // Return weather data if fetch is successful
+                displayWeather(data);
             } else {
                 throw new Error(`${data.cod}: ${data.message}`);
             }
         } catch (error) {
             console.log('Error fetching weather data:', error);
             alert('Failed to fetch weather data. Please verify that the area name is correct and try again later.');
-            return null; // Return null if fetch fails
         }
     }
 
@@ -55,14 +52,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             if (response.ok) {
-                return data; // Return AQI data if fetch is successful
+                aqi = data.data.aqi; // Update global variable with AQI value
+                displayAQI(data);
             } else {
                 throw new Error(`${data.status}: ${data.data}`);
             }
         } catch (error) {
             console.log('Error fetching AQI data:', error);
             // Do not show an alert for AQI fetch errors
-            return null; // Return null if fetch fails
         }
     }
 
@@ -75,37 +72,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const weatherConditionCode = data.weather[0].id; // Get weather condition code
 
         let weatherHTML = `
-        <h2>${cityName}</h2>
-        <p>Temperature: ${temperature}°C <img src="https://openweathermap.org/img/w/${getWeatherIcon(weatherConditionCode)}.png" alt="Weather Icon"></p>
-        <p>Description: ${description}</p>
-        <p>Humidity: ${humidity}%</p>
-        <p>Chance of Rain: ${chanceOfRain}%</p>
-    `;
+            <h2>${cityName}</h2>
+            <p>Temperature: ${temperature}°C <img src="https://openweathermap.org/img/w/${getWeatherIcon(weatherConditionCode)}.png" alt="Weather Icon"></p>
+            <p>Description: ${description}</p>
+            <p>Humidity: ${humidity}%</p>
+            <p>Chance of Rain: ${chanceOfRain}%</p>
+        `;
 
-        weatherDetails.innerHTML = weatherHTML;
-
-        // Adjust footer position
-        adjustFooterPosition();
-    }
-
-    function displayAQI(data) {
-        const aqiValue = data.data.aqi;
-        const aqiDescription = getAQIDescription(aqiValue);
-
-        // Remove the previous AQI element, if it exists
-        if (aqiElement && aqiElement.parentNode) {
-            aqiElement.parentNode.removeChild(aqiElement);
+        // Check if AQI value is available
+        if (aqi !== '') {
+            weatherHTML += `<p>Air Quality Index: ${aqi} ${getAQIDescription(aqi)}</p>`;
         }
 
-        // Create a new AQI element
-        const newAqiElement = document.createElement('p');
-        newAqiElement.textContent = `Air Quality Index: ${aqiValue} ${aqiDescription}`;
-
-        // Append the new AQI element to the weather details
-        weatherDetails.appendChild(newAqiElement);
-
-        // Update the reference to the AQI element
-        aqiElement = newAqiElement;
+        weatherDetails.innerHTML = weatherHTML;
     }
 
     function getAQIDescription(aqi) {
@@ -189,32 +168,4 @@ document.addEventListener('DOMContentLoaded', function() {
         // Return the corresponding icon name for the given weather condition code
         return weatherIcons[weatherConditionCode] || '01d'; // Default to clear sky icon if code not found
     }
-
-    // Function to adjust footer position
-    function adjustFooterPosition() {
-        const containerHeight = document.querySelector('.container').offsetHeight;
-        const weatherDetailsHeight = document.getElementById('weatherDetails').offsetHeight;
-        const windowHeight = window.innerHeight;
-        const footer = document.querySelector('.footer');
-
-        if ((containerHeight + weatherDetailsHeight) < windowHeight) {
-            footer.style.position = 'fixed';
-            footer.style.bottom = '10px';
-            footer.style.right = '10px'; // Adjust the position to bottom right
-        } else {
-            footer.style.position = 'relative';
-            footer.style.bottom = 'auto'; // Reset bottom position
-            footer.style.right = 'auto'; // Reset right position
-        }
-    }
-
-    // Open LinkedIn profile in new tab
-    window.openLinkedIn = function() {
-        window.open('https://www.linkedin.com/in/mahashrid/', '_blank');
-    };
-
-    // Call adjustFooterPosition initially and on window resize
-    window.addEventListener('resize', adjustFooterPosition);
-    adjustFooterPosition();
-
 });

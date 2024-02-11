@@ -2,14 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('searchBtn');
     const locationInput = document.getElementById('locationInput');
     const weatherDetails = document.getElementById('weatherDetails');
-    let aqi = ''; // Global variable to store AQI value
 
-    // Function to fetch weather and AQI data
+    // Function to fetch weather data
     function fetchData() {
         const location = locationInput.value.trim();
         if (location !== '') {
             fetchWeather(location);
-            fetchAQI(location); // Fetch AQI data
         } else {
             alert('Please enter a city name or zip code');
         }
@@ -44,25 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function fetchAQI(location) {
-        const apiUrl = `http://api.waqi.info/feed/${location}/?token=demo`;
-
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            if (response.ok) {
-                aqi = data.data.aqi; // Update global variable with AQI value
-                displayAQI(data);
-            } else {
-                throw new Error(`${data.status}: ${data.data}`);
-            }
-        } catch (error) {
-            console.log('Error fetching AQI data:', error);
-            // Do not show an alert for AQI fetch errors
-        }
-    }
-
     function displayWeather(data) {
         const cityName = data.name;
         const temperature = data.main.temp;
@@ -79,30 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>Chance of Rain: ${chanceOfRain}%</p>
         `;
 
-        // Check if AQI value is available
-        if (aqi !== '') {
-            weatherHTML += `<p>Air Quality Index: ${aqi} ${getAQIDescription(aqi)}</p>`;
-        }
-
         weatherDetails.innerHTML = weatherHTML;
-    }
 
-    function getAQIDescription(aqi) {
-        let description = '';
-        if (aqi >= 0 && aqi <= 50) {
-            description = '( Good )';
-        } else if (aqi > 50 && aqi <= 100) {
-            description = '( Moderate )';
-        } else if (aqi > 100 && aqi <= 150) {
-            description = '( Unhealthy for Sensitive Groups )';
-        } else if (aqi > 150 && aqi <= 200) {
-            description = '( Unhealthy )';
-        } else if (aqi > 200 && aqi <= 300) {
-            description = '( Very Unhealthy )';
-        } else if (aqi > 300 && aqi <= 999999999) {
-            description = '( Hazardous )';
-        }
-        return description;
+        // Adjust footer position
+        adjustFooterPosition();
     }
 
     function getWeatherIcon(weatherConditionCode) {
@@ -167,5 +126,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Return the corresponding icon name for the given weather condition code
         return weatherIcons[weatherConditionCode] || '01d'; // Default to clear sky icon if code not found
+    }
+
+    // Function to adjust footer position
+    function adjustFooterPosition() {
+        const containerHeight = document.querySelector('.container').offsetHeight;
+        const weatherDetailsHeight = document.getElementById('weatherDetails').offsetHeight;
+        const windowHeight = window.innerHeight;
+        const footer = document.querySelector('.footer');
+
+        if ((containerHeight + weatherDetailsHeight) < windowHeight) {
+            footer.style.position = 'fixed';
+            footer.style.bottom = '10px';
+            footer.style.right = '10px'; // Adjust the position to bottom right
+        } else {
+            footer.style.position = 'relative';
+            footer.style.bottom = 'auto'; // Reset bottom position
+            footer.style.right = 'auto'; // Reset right position
+        }
     }
 });
